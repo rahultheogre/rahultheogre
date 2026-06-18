@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NLP Insights — Newspaper Intelligence · Rahul Sharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:    #0f0f0f;
+      --white:  #ffffff;
+      --red:    #e03a1e;
+      --blue:   #1d4ed8;
+      --dim:    #555;
+      --border: #e5e5e5;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--ink); line-height: 1.65; }
+
+    /* NAV */
+    nav { border-bottom: 1px solid var(--border); padding: 1rem 5vw; display: flex; justify-content: space-between; align-items: center; }
+    nav a { font-size: 0.8rem; font-weight: 600; text-decoration: none; color: var(--dim); letter-spacing: 0.05em; text-transform: uppercase; }
+    nav a:hover { color: var(--red); }
+    .nav-brand { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 800; color: var(--ink) !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+    /* HERO */
+    .hero { padding: 5rem 5vw 4rem; border-bottom: 2px solid var(--ink); }
+    .hero-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -2px; }
+    .hero h1 .red { color: var(--red); }
+    .hero-sub { margin-top: 1.2rem; font-size: 1rem; color: var(--dim); max-width: 560px; line-height: 1.6; }
+    .hero-tags { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.7rem; border: 1px solid #ccc; color: #444; }
+
+    /* SECTIONS */
+    .section { padding: 3.5rem 5vw; border-bottom: 1px solid var(--border); }
+    .section-dark { padding: 3.5rem 5vw; border-bottom: 2px solid var(--ink); background: var(--ink); color: var(--white); }
+    .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    .section-dark .eyebrow { color: #60a5fa; }
+    h2 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 1.4rem; letter-spacing: -0.3px; }
+    .section-dark h2 { color: var(--white); }
+    p { font-size: 0.93rem; color: #333; margin-bottom: 0.8rem; line-height: 1.7; }
+    .section-dark p { color: #aaa; }
+
+    /* PIPELINE */
+    .pipeline-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 1.5rem; }
+    .pipe-step { padding: 1.8rem 1.5rem; border-right: 1px solid #222; }
+    .pipe-step:last-child { border-right: none; }
+    .pipe-num { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--red); font-weight: 500; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+    .pipe-step h4 { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+    .pipe-step p { font-size: 0.78rem; color: #888; line-height: 1.5; margin: 0; }
+    .pipe-latency { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #4ade80; margin-top: 0.6rem; }
+
+    /* CODE BLOCK */
+    .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; background: #0a0a0a; color: #ccc; padding: 2rem; line-height: 1.9; margin-top: 1.5rem; overflow-x: auto; }
+    .c-red   { color: var(--red); }
+    .c-blue  { color: #60a5fa; }
+    .c-green { color: #4ade80; }
+    .c-dim   { color: #555; }
+
+    /* DESIGN DECISIONS */
+    .decisions { display: flex; flex-direction: column; gap: 0; margin-top: 1.5rem; }
+    .decision { border-left: 3px solid var(--border); padding: 1.4rem 1.5rem; transition: border-color 0.15s; }
+    .decision:hover { border-left-color: var(--red); }
+    .decision-q { font-size: 0.82rem; font-weight: 600; color: var(--red); margin-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em; }
+    .decision h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .decision p { font-size: 0.88rem; color: #444; margin: 0; line-height: 1.6; }
+    .decision .rejected { font-size: 0.78rem; color: #999; margin-top: 0.4rem; font-family: 'JetBrains Mono', monospace; }
+
+    /* STACK */
+    .stack-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .chip { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500; background: #f5f5f5; border: 1px solid var(--border); padding: 0.25rem 0.65rem; color: var(--ink); }
+    .chip-label { font-size: 0.7rem; color: var(--blue); font-weight: 600; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.2rem; margin-bottom: 0.4rem; display: block; }
+
+    /* METRICS INLINE */
+    .metrics-inline { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.2rem; }
+    .m-item { border-left: 2px solid var(--blue); padding-left: 0.8rem; }
+    .m-val { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--blue); line-height: 1; }
+    .m-lbl { font-size: 0.72rem; color: var(--dim); margin-top: 0.2rem; }
+
+    /* FOOTER */
+    footer { border-top: 2px solid var(--ink); padding: 1.5rem 5vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--ink); }
+    footer p { font-size: 0.78rem; color: #666; margin: 0; }
+    .footer-nav { display: flex; gap: 1.5rem; }
+    .footer-nav a { font-size: 0.78rem; font-weight: 600; text-decoration: none; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-nav a:hover { color: var(--red); }
+
+    @media (max-width: 680px) {
+      .pipeline-steps { grid-template-columns: 1fr; }
+      .pipe-step { border-right: none; border-bottom: 1px solid #222; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Rahul Sharma</a>
+  <div style="display:flex;gap:2rem;">
+    <a href="index.html">← Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-meta">Onward Technologies &nbsp;·&nbsp; 2021–2023 &nbsp;·&nbsp; Production System</div>
+  <h1>NLP <span class="red">Insights</span><br/>Newspaper<br/>Intelligence</h1>
+  <p class="hero-sub">A BERT-based multi-task NLP platform for automated analysis of newspaper and media content — entity-level sentiment, abstractive summarisation, named entity recognition, and neural topic modelling in a single shared-encoder pipeline.</p>
+  <div class="hero-tags">
+    <span class="tag">BERT</span>
+    <span class="tag">BERTopic</span>
+    <span class="tag">HuggingFace Transformers</span>
+    <span class="tag">NER</span>
+    <span class="tag">Abstractive Summarisation</span>
+    <span class="tag">Multi-task Learning</span>
+    <span class="tag">FastAPI</span>
+    <span class="tag">Batch Processing</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="section">
+  <div class="eyebrow">Problem</div>
+  <h2>Manual media monitoring doesn't scale — and keyword search misses what matters.</h2>
+  <p>Clients needed to track how their brands, executives, and competitors were being covered across hundreds of publications daily. The existing approach — human analysts scanning clippings — couldn't keep pace with volume, and keyword-based tools flagged mentions without understanding context, tone, or which specific entities the sentiment applied to.</p>
+  <p>The core challenge was that a single article could carry positive sentiment about one company and negative sentiment about another mentioned in the same paragraph. Any system that scored at the article level was nearly useless for actionable brand intelligence. The platform needed entity-level understanding, not document-level aggregation.</p>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section-dark">
+  <div class="eyebrow">Architecture</div>
+  <h2>Shared Encoder, Four Inference Heads</h2>
+  <div class="pipeline-steps">
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 01</div>
+      <h4>Ingestion &amp; Preprocessing</h4>
+      <p>Batch article fetch from publisher feeds. Deduplication via content hash. Sentence segmentation, entity span detection, normalisation before encoding.</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 02</div>
+      <h4>BERT Encoding</h4>
+      <p>Single forward pass produces contextual embeddings for the full article and each entity span. Shared representation feeds all downstream heads — no redundant computation.</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 03</div>
+      <h4>Multi-task Inference</h4>
+      <p>Four parallel heads: NER (token classification), entity sentiment (span-level), abstractive summarisation (seq2seq decoder), BERTopic topic assignment (c-TF-IDF on BERT clusters).</p>
+      <div class="pipe-latency">94% NER F1</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 04</div>
+      <h4>Structured Output</h4>
+      <p>Results serialised to JSON: per-entity sentiment scores, NER tags, summary string, topic IDs. FastAPI serves downstream dashboards and client integrations.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="c-dim">// Pipeline data flow</span>
+<span class="c-red">Article batch</span> → <span class="c-blue">dedup</span> → <span class="c-blue">sentence segment</span> → <span class="c-blue">entity spans</span>
+  → <span class="c-green">BERT encoder</span>   <span class="c-dim">// single forward pass, shared</span>
+      ├─ <span class="c-blue">NER head</span>          token classification    <span class="c-green">94% F1</span>
+      ├─ <span class="c-blue">sentiment head</span>    span-level, per entity
+      ├─ <span class="c-blue">summarisation</span>     seq2seq decoder
+      └─ <span class="c-blue">BERTopic</span>          UMAP → HDBSCAN → c-TF-IDF
+
+<span class="c-red">POST /analyse</span> → <span class="c-green">structured JSON</span>   <span class="c-dim">{ entities, sentiment, summary, topics }</span>
+  </div>
+</div>
+
+<!-- DESIGN DECISIONS -->
+<div class="section">
+  <div class="eyebrow">Design Decisions</div>
+  <h2>Why these choices, not others.</h2>
+  <div class="decisions">
+
+    <div class="decision">
+      <div class="decision-q">WHY BERT OVER CLASSICAL NLP (SPACY / VADER)?</div>
+      <h4>Media language is context-dependent — the same word means different things in different sentences</h4>
+      <p>Classical NLP pipelines use static word vectors and rule-based sentiment lexicons. They fail on media text where "volatile" describing a CEO's strategy is negative, but "volatile" describing market conditions driving a company's growth is neutral-to-positive. BERT's bidirectional context window captures these distinctions. Entity-level sentiment especially requires understanding what the surrounding clauses attribute to a specific span — a problem classical approaches cannot solve reliably.</p>
+      <div class="rejected">// Rejected: spaCy + VADER pipeline (no contextual entity-sentiment), TextBlob (lexicon-based, ignores negation context)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY MULTI-TASK (SHARED ENCODER) OVER SEPARATE MODELS?</div>
+      <h4>One BERT forward pass is cheaper than four — and joint training improves all heads</h4>
+      <p>Running four independent BERT models at inference means four full forward passes per article. A shared encoder computes representations once and feeds all task heads in parallel. Beyond compute efficiency, multi-task training provides regularisation — the NER head and sentiment head share gradients, which improves entity boundary detection because the model learns that entity spans are also units of sentiment attribution. The heads reinforce each other.</p>
+      <div class="rejected">// Rejected: four independent fine-tuned BERT models (4x inference cost, no cross-task signal), pipeline chaining (error propagation from NER into sentiment)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY BERTOPIC OVER LDA?</div>
+      <h4>LDA requires fixing K upfront and produces incoherent topics on short media texts</h4>
+      <p>Latent Dirichlet Allocation assumes a fixed number of topics chosen before training, which requires manual tuning and breaks when the topic landscape shifts (e.g., a political event spawning new coverage clusters). BERTopic uses UMAP dimensionality reduction followed by HDBSCAN clustering — it discovers K automatically from the data and produces far more coherent topics on short news texts because the underlying representations are BERT embeddings, not raw term frequencies.</p>
+      <div class="rejected">// Rejected: LDA (requires fixed K, poor coherence on short texts), NMF (same fixed-K problem, no semantic embeddings)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY ABSTRACTIVE SUMMARISATION OVER EXTRACTIVE?</div>
+      <h4>Extracted sentences from media articles are rarely coherent summaries — they're click-baits</h4>
+      <p>Extractive methods pull the highest-scoring sentences directly from the source. In news articles, the highest-scoring sentences are often sensationalised leads that don't accurately represent the article's substance. Abstractive summarisation generates a new sentence from the full context, producing shorter, more neutral summaries that clients could feed directly into monitoring dashboards without manual editing.</p>
+      <div class="rejected">// Rejected: TextRank extractive (pulls headline-biased sentences), LSA summarisation (no language generation, produces fragments)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY BATCH PROCESSING OVER REAL-TIME STREAM?</div>
+      <h4>Media monitoring workflows are inherently latency-tolerant — throughput matters more than latency</h4>
+      <p>Clients reviewed coverage reports every few hours, not second-by-second. A streaming architecture would add Kafka or Kinesis operational overhead for a latency budget clients didn't need. Batch processing let us group articles into GPU-efficient batch sizes for BERT inference, dramatically improving throughput and reducing cost per article compared to processing requests one at a time.</p>
+      <div class="rejected">// Rejected: Kafka streaming pipeline (operational overhead without latency benefit), synchronous per-request inference (GPU underutilisation)</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TECH STACK -->
+<div class="section">
+  <div class="eyebrow">Tech Stack</div>
+  <h2>Technologies</h2>
+
+  <span class="chip-label">ML / AI</span>
+  <div class="stack-row">
+    <span class="chip">BERT</span>
+    <span class="chip">BERTopic</span>
+    <span class="chip">HuggingFace Transformers</span>
+    <span class="chip">UMAP</span>
+    <span class="chip">HDBSCAN</span>
+    <span class="chip">PyTorch</span>
+  </div>
+
+  <span class="chip-label">Backend</span>
+  <div class="stack-row">
+    <span class="chip">Python</span>
+    <span class="chip">FastAPI</span>
+    <span class="chip">Batch Processing Pipeline</span>
+    <span class="chip">spaCy</span>
+  </div>
+
+  <span class="chip-label">Infrastructure</span>
+  <div class="stack-row">
+    <span class="chip">Docker</span>
+    <span class="chip">GPU Batch Inference</span>
+    <span class="chip">PostgreSQL</span>
+    <span class="chip">Redis</span>
+  </div>
+
+  <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+    <div class="eyebrow">Outcomes</div>
+    <div class="metrics-inline">
+      <div class="m-item"><div class="m-val">94%</div><div class="m-lbl">NER F1 score</div></div>
+      <div class="m-item"><div class="m-val">4-in-1</div><div class="m-lbl">Tasks, single encoder pass</div></div>
+      <div class="m-item"><div class="m-val">Entity</div><div class="m-lbl">Sentiment granularity — not article-level</div></div>
+      <div class="m-item"><div class="m-val">Auto-K</div><div class="m-lbl">Topic count — no manual tuning</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Rahul Sharma</p>
+  <div class="footer-nav">
+    <a href="index.html">Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:rahultheogre@gmail.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

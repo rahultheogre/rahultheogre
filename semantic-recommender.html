@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Semantic Recommender Engine — Rahul Sharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:    #0f0f0f;
+      --white:  #ffffff;
+      --red:    #e03a1e;
+      --blue:   #1d4ed8;
+      --dim:    #555;
+      --border: #e5e5e5;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--ink); line-height: 1.65; }
+
+    /* NAV */
+    nav { border-bottom: 1px solid var(--border); padding: 1rem 5vw; display: flex; justify-content: space-between; align-items: center; }
+    nav a { font-size: 0.8rem; font-weight: 600; text-decoration: none; color: var(--dim); letter-spacing: 0.05em; text-transform: uppercase; }
+    nav a:hover { color: var(--red); }
+    .nav-brand { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 800; color: var(--ink) !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+    /* HERO */
+    .hero { padding: 5rem 5vw 4rem; border-bottom: 2px solid var(--ink); }
+    .hero-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -2px; }
+    .hero h1 .red { color: var(--red); }
+    .hero-sub { margin-top: 1.2rem; font-size: 1rem; color: var(--dim); max-width: 560px; line-height: 1.6; }
+    .hero-tags { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.7rem; border: 1px solid #ccc; color: #444; }
+
+    /* SECTIONS */
+    .section { padding: 3.5rem 5vw; border-bottom: 1px solid var(--border); }
+    .section-dark { padding: 3.5rem 5vw; border-bottom: 2px solid var(--ink); background: var(--ink); color: var(--white); }
+    .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    .section-dark .eyebrow { color: #60a5fa; }
+    h2 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 1.4rem; letter-spacing: -0.3px; }
+    .section-dark h2 { color: var(--white); }
+    p { font-size: 0.93rem; color: #333; margin-bottom: 0.8rem; line-height: 1.7; }
+    .section-dark p { color: #aaa; }
+
+    /* PIPELINE */
+    .pipeline-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 1.5rem; }
+    .pipe-step { padding: 1.8rem 1.5rem; border-right: 1px solid #222; }
+    .pipe-step:last-child { border-right: none; }
+    .pipe-num { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--red); font-weight: 500; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+    .pipe-step h4 { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+    .pipe-step p { font-size: 0.78rem; color: #888; line-height: 1.5; margin: 0; }
+    .pipe-latency { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #4ade80; margin-top: 0.6rem; }
+
+    /* CODE BLOCK */
+    .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; background: #0a0a0a; color: #ccc; padding: 2rem; line-height: 1.9; margin-top: 1.5rem; overflow-x: auto; }
+    .c-red   { color: var(--red); }
+    .c-blue  { color: #60a5fa; }
+    .c-green { color: #4ade80; }
+    .c-dim   { color: #555; }
+
+    /* DESIGN DECISIONS */
+    .decisions { display: flex; flex-direction: column; gap: 0; margin-top: 1.5rem; }
+    .decision { border-left: 3px solid var(--border); padding: 1.4rem 1.5rem; transition: border-color 0.15s; }
+    .decision:hover { border-left-color: var(--red); }
+    .decision-q { font-size: 0.82rem; font-weight: 600; color: var(--red); margin-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em; }
+    .decision h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .decision p { font-size: 0.88rem; color: #444; margin: 0; line-height: 1.6; }
+    .decision .rejected { font-size: 0.78rem; color: #999; margin-top: 0.4rem; font-family: 'JetBrains Mono', monospace; }
+
+    /* STACK */
+    .stack-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .chip { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500; background: #f5f5f5; border: 1px solid var(--border); padding: 0.25rem 0.65rem; color: var(--ink); }
+    .chip-label { font-size: 0.7rem; color: var(--blue); font-weight: 600; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.2rem; margin-bottom: 0.4rem; display: block; }
+
+    /* METRICS INLINE */
+    .metrics-inline { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.2rem; }
+    .m-item { border-left: 2px solid var(--blue); padding-left: 0.8rem; }
+    .m-val { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--blue); line-height: 1; }
+    .m-lbl { font-size: 0.72rem; color: var(--dim); margin-top: 0.2rem; }
+
+    /* FOOTER */
+    footer { border-top: 2px solid var(--ink); padding: 1.5rem 5vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--ink); }
+    footer p { font-size: 0.78rem; color: #666; margin: 0; }
+    .footer-nav { display: flex; gap: 1.5rem; }
+    .footer-nav a { font-size: 0.78rem; font-weight: 600; text-decoration: none; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-nav a:hover { color: var(--red); }
+
+    @media (max-width: 680px) {
+      .pipeline-steps { grid-template-columns: 1fr; }
+      .pipe-step { border-right: none; border-bottom: 1px solid #222; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Rahul Sharma</a>
+  <div style="display:flex;gap:2rem;">
+    <a href="index.html">← Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-meta">SRM Technologies &nbsp;·&nbsp; 2024–2025 &nbsp;·&nbsp; Production System</div>
+  <h1>Semantic<br/><span class="red">Recommender</span><br/>Engine</h1>
+  <p class="hero-sub">A real-time, 3-stage recommendation pipeline for conference networking — semantic retrieval, learning-to-rank reranking, and feature-based filtering. Built for 1000+ concurrent users at sub-200ms latency.</p>
+  <div class="hero-tags">
+    <span class="tag">Vector Search</span>
+    <span class="tag">LambdaMART</span>
+    <span class="tag">HNSW</span>
+    <span class="tag">Change Data Capture</span>
+    <span class="tag">AWS Bedrock</span>
+    <span class="tag">FastAPI</span>
+    <span class="tag">AWS ECS</span>
+    <span class="tag">Stella400M</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="section">
+  <div class="eyebrow">Problem</div>
+  <h2>Keyword matching doesn't find the right people.</h2>
+  <p>At large professional events, attendees with genuinely aligned backgrounds and interests fail to connect — because traditional filters operate on job titles and industry tags, not professional identity.</p>
+  <p>The system needed to understand what someone actually knows and has done, and surface the most relevant connections in real time as profiles updated throughout the event.</p>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section-dark">
+  <div class="eyebrow">Architecture</div>
+  <h2>3-Stage Pipeline</h2>
+  <div class="pipeline-steps">
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 01</div>
+      <h4>Semantic Retrieval</h4>
+      <p>HNSW index on Stella400M embeddings (768-dim). Weighted ingestion: Q&A 50% · Experience 30% · Education 20%. Returns top-100 candidates.</p>
+      <div class="pipe-latency">&lt;50ms</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 02</div>
+      <h4>LambdaMART Reranking</h4>
+      <p>Learning-to-rank over 100 candidates. Signals: interaction history, profile completeness, engagement patterns. Gradient boosting optimized for NDCG.</p>
+      <div class="pipe-latency">&lt;100ms</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 03</div>
+      <h4>Feature Filtering</h4>
+      <p>Hard filters: availability, geography, seniority, industry. Event-context scoped. Runs last to avoid polluting the ranking signal.</p>
+      <div class="pipe-latency">&lt;20ms</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">REAL-TIME</div>
+      <h4>Change Data Capture</h4>
+      <p>MongoDB Change Streams on 6 collections. Profile update triggers async embedding regeneration — main request path never blocked.</p>
+      <div class="pipe-latency">&lt;2s regen</div>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="c-dim">// Data flow</span>
+<span class="c-red">Profile update</span> → <span class="c-blue">Change Stream</span> → <span class="c-blue">Async task</span> → <span class="c-green">Stella400M embed</span> → <span class="c-blue">HNSW index</span>
+
+<span class="c-red">GET /recommend</span>
+  → <span class="c-blue">HNSW cosine similarity</span>    top-100   <span class="c-green">&lt;50ms</span>
+  → <span class="c-blue">LambdaMART reranking</span>              <span class="c-green">&lt;100ms</span>
+  → <span class="c-blue">Feature filter</span>                    <span class="c-green">&lt;20ms</span>
+  → <span class="c-green">Response</span>                          <span class="c-green">&lt;200ms total</span>
+  </div>
+</div>
+
+<!-- DESIGN DECISIONS -->
+<div class="section">
+  <div class="eyebrow">Design Decisions</div>
+  <h2>Why these choices, not others.</h2>
+  <div class="decisions">
+
+    <div class="decision">
+      <div class="decision-q">WHY HNSW?</div>
+      <h4>O(log n) retrieval at scale — exact search doesn't hold up at 1000+ concurrent users</h4>
+      <p>Flat exact search would require scanning all profiles for every request. HNSW gives approximate nearest-neighbour search with tunable recall — we traded a small accuracy loss for the latency guarantee we needed. Index updates on profile change are incremental, so real-time CDC stays fast.</p>
+      <div class="rejected">// Rejected: Flat FAISS index (no concurrent update support), Pinecone (cost at this scale)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY LAMBDAMART OVER A CROSS-ENCODER?</div>
+      <h4>We needed to rerank on behavioural signals, not just semantic similarity</h4>
+      <p>Cross-encoders are strong on semantic relevance but blind to engagement history, profile completeness, and interaction patterns. LambdaMART is a gradient-boosted L2R model that directly optimises NDCG — it learns from past connection outcomes, not just text similarity. Faster than a cross-encoder at inference too.</p>
+      <div class="rejected">// Rejected: Cross-encoder reranker (ignores behavioural signals), simple score fusion (no learning)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY STELLA400M?</div>
+      <h4>Better semantic compression of professional identity than generic models</h4>
+      <p>Tested against OpenAI text-embedding-ada-002 and BGE-M3. Stella400M had better recall on professional profile similarity tasks — particularly on Q&A style text, which carries the most signal in this domain. Smaller than BGE-M3, so embedding generation stays under 2s per profile.</p>
+      <div class="rejected">// Rejected: ada-002 (weaker on professional Q&A), BGE-M3 (slower regen cycle)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY WEIGHTED FEATURES (Q&A 50% / EXP 30% / EDU 20%)?</div>
+      <h4>Not all profile fields carry equal networking signal</h4>
+      <p>Q&A responses are free-form and reveal actual expertise and interests — highest signal. Experience descriptions carry role and domain context. Education is a weak signal for professional alignment at this event type. Weights were determined empirically from A/B testing on pilot events before production rollout.</p>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY FILTER LAST, NOT FIRST?</div>
+      <h4>Filtering before ranking contaminates the candidate pool for the reranker</h4>
+      <p>Applying hard filters (geography, seniority) before LambdaMART reranking removes candidates the model might rank highly for other reasons. Running filters as the final stage means the reranker always sees a semantically rich candidate pool, and we only cut at the end for hard constraints.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- TECH STACK -->
+<div class="section">
+  <div class="eyebrow">Tech Stack</div>
+  <h2>Technologies</h2>
+  <span class="chip-label">ML / AI</span>
+  <div class="stack-row">
+    <span class="chip">Stella400M</span><span class="chip">LambdaMART</span><span class="chip">HNSW</span>
+    <span class="chip">AWS Bedrock</span><span class="chip">PyTorch</span><span class="chip">HuggingFace Transformers</span>
+  </div>
+  <span class="chip-label">Backend</span>
+  <div class="stack-row">
+    <span class="chip">Python 3.8+</span><span class="chip">FastAPI</span><span class="chip">AsyncIO</span>
+    <span class="chip">MongoDB Change Streams</span><span class="chip">DocumentDB</span>
+  </div>
+  <span class="chip-label">Infrastructure</span>
+  <div class="stack-row">
+    <span class="chip">AWS ECS</span><span class="chip">Auto-scaling</span>
+    <span class="chip">CloudWatch</span><span class="chip">Docker</span><span class="chip">GitHub Actions</span>
+  </div>
+
+  <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+    <div class="eyebrow">Outcomes</div>
+    <div class="metrics-inline">
+      <div class="m-item"><div class="m-val">&lt;200ms</div><div class="m-lbl">End-to-end latency</div></div>
+      <div class="m-item"><div class="m-val">75%</div><div class="m-lbl">Fewer irrelevant results</div></div>
+      <div class="m-item"><div class="m-val">85%</div><div class="m-lbl">User satisfaction · top-3</div></div>
+      <div class="m-item"><div class="m-val">99.9%</div><div class="m-lbl">Uptime</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Rahul Sharma</p>
+  <div class="footer-nav">
+    <a href="index.html">Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:rahultheogre@gmail.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SellBot — Agentic Sales Platform · Rahul Sharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:    #0f0f0f;
+      --white:  #ffffff;
+      --red:    #e03a1e;
+      --blue:   #1d4ed8;
+      --dim:    #555;
+      --border: #e5e5e5;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--ink); line-height: 1.65; }
+
+    nav { border-bottom: 1px solid var(--border); padding: 1rem 5vw; display: flex; justify-content: space-between; align-items: center; }
+    nav a { font-size: 0.8rem; font-weight: 600; text-decoration: none; color: var(--dim); letter-spacing: 0.05em; text-transform: uppercase; }
+    nav a:hover { color: var(--red); }
+    .nav-brand { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 800; color: var(--ink) !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+    .hero { padding: 5rem 5vw 4rem; border-bottom: 2px solid var(--ink); }
+    .hero-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -2px; }
+    .hero h1 .red { color: var(--red); }
+    .hero-sub { margin-top: 1.2rem; font-size: 1rem; color: var(--dim); max-width: 560px; line-height: 1.6; }
+    .hero-tags { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.7rem; border: 1px solid #ccc; color: #444; }
+
+    .section { padding: 3.5rem 5vw; border-bottom: 1px solid var(--border); }
+    .section-dark { padding: 3.5rem 5vw; border-bottom: 2px solid var(--ink); background: var(--ink); color: var(--white); }
+    .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    .section-dark .eyebrow { color: #60a5fa; }
+    h2 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 1.4rem; letter-spacing: -0.3px; }
+    .section-dark h2 { color: var(--white); }
+    p { font-size: 0.93rem; color: #333; margin-bottom: 0.8rem; line-height: 1.7; }
+    .section-dark p { color: #aaa; }
+
+    .pipeline-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 1.5rem; }
+    .pipe-step { padding: 1.8rem 1.5rem; border-right: 1px solid #222; }
+    .pipe-step:last-child { border-right: none; }
+    .pipe-num { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--red); font-weight: 500; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+    .pipe-step h4 { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+    .pipe-step p { font-size: 0.78rem; color: #888; line-height: 1.5; margin: 0; }
+    .pipe-latency { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #4ade80; margin-top: 0.6rem; }
+
+    .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; background: #0a0a0a; color: #ccc; padding: 2rem; line-height: 1.9; margin-top: 1.5rem; overflow-x: auto; }
+    .c-red   { color: var(--red); }
+    .c-blue  { color: #60a5fa; }
+    .c-green { color: #4ade80; }
+    .c-dim   { color: #555; }
+
+    .decisions { display: flex; flex-direction: column; gap: 0; margin-top: 1.5rem; }
+    .decision { border-left: 3px solid var(--border); padding: 1.4rem 1.5rem; transition: border-color 0.15s; }
+    .decision:hover { border-left-color: var(--red); }
+    .decision-q { font-size: 0.82rem; font-weight: 600; color: var(--red); margin-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em; }
+    .decision h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .decision p { font-size: 0.88rem; color: #444; margin: 0; line-height: 1.6; }
+    .decision .rejected { font-size: 0.78rem; color: #999; margin-top: 0.4rem; font-family: 'JetBrains Mono', monospace; }
+
+    .stack-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .chip { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500; background: #f5f5f5; border: 1px solid var(--border); padding: 0.25rem 0.65rem; color: var(--ink); }
+    .chip-label { font-size: 0.7rem; color: var(--blue); font-weight: 600; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.2rem; margin-bottom: 0.4rem; display: block; }
+
+    .metrics-inline { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.2rem; }
+    .m-item { border-left: 2px solid var(--blue); padding-left: 0.8rem; }
+    .m-val { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--blue); line-height: 1; }
+    .m-lbl { font-size: 0.72rem; color: var(--dim); margin-top: 0.2rem; }
+
+    footer { border-top: 2px solid var(--ink); padding: 1.5rem 5vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--ink); }
+    footer p { font-size: 0.78rem; color: #666; margin: 0; }
+    .footer-nav { display: flex; gap: 1.5rem; }
+    .footer-nav a { font-size: 0.78rem; font-weight: 600; text-decoration: none; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-nav a:hover { color: var(--red); }
+
+    @media (max-width: 680px) {
+      .pipeline-steps { grid-template-columns: 1fr; }
+      .pipe-step { border-right: none; border-bottom: 1px solid #222; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Rahul Sharma</a>
+  <div style="display:flex;gap:2rem;">
+    <a href="index.html">← Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-meta">SellCX &nbsp;·&nbsp; Feb 2024–Jul 2024 &nbsp;·&nbsp; Production System</div>
+  <h1>Sell<span class="red">Bot</span><br/>Agentic Sales<br/>Platform</h1>
+  <p class="hero-sub">A voice-first multi-agent sales platform built on LangGraph — a supervisor routing live calls across 5 specialised agents, grounded in a Neo4j knowledge graph and Microsoft GraphRAG, with DSPy-optimised prompts for production reliability.</p>
+  <div class="hero-tags">
+    <span class="tag">LangGraph</span>
+    <span class="tag">Multi-agent</span>
+    <span class="tag">Neo4j</span>
+    <span class="tag">GraphRAG</span>
+    <span class="tag">Leiden Community Detection</span>
+    <span class="tag">DSPy</span>
+    <span class="tag">Twilio</span>
+    <span class="tag">Deepgram STT</span>
+    <span class="tag">LiveKit WebRTC</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="section">
+  <div class="eyebrow">Problem</div>
+  <h2>A single LLM cannot handle the full scope of a live sales call — and mistakes in voice are unrecoverable.</h2>
+  <p>Sales calls span multiple distinct tasks: qualifying SMB leads, handling general support questions, booking appointments, managing CRM data, and routing to human agents. A monolithic LLM handling all of these either gets overwhelmed by competing instructions or defaults to a generic tone that kills conversion. What was needed was specialist behaviour per intent — with a supervisor that could route mid-conversation without the caller noticing the handoff.</p>
+  <p>Voice compounded the reliability requirement. A hallucinated answer in a chat interface can be edited. On a live call it damages trust immediately. Every agent response needed to be structurally constrained and grounded in the company's actual sales rules and conversation policies — not the model's priors.</p>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section-dark">
+  <div class="eyebrow">Architecture</div>
+  <h2>Supervisor + 5 Agents + Graph Knowledge</h2>
+  <div class="pipeline-steps">
+    <div class="pipe-step">
+      <div class="pipe-num">VOICE IN</div>
+      <h4>Voice Pipeline</h4>
+      <p>Twilio VOIP → Deepgram STT transcription → LangGraph Supervisor. Response synthesis via Vercel AI SDK TTS → LiveKit WebRTC back to caller.</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">ROUTING</div>
+      <h4>LangGraph Supervisor</h4>
+      <p>Intent classifier routes each turn to the correct specialised agent: Sales/SMB, General Support, Appointment Scheduling, Lead Management, or VCC (Virtual Call Centre) escalation.</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">KNOWLEDGE</div>
+      <h4>Neo4j + GraphRAG</h4>
+      <p>4 node types: conversation policies, sales rules, user profiles, interaction history. Microsoft GraphRAG with Leiden community detection for multi-hop reasoning across related entities.</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">RELIABILITY</div>
+      <h4>DSPy + Structured Outputs</h4>
+      <p>DSPy bootstrap few-shot optimisation for each agent's prompts. Pydantic-validated structured outputs. Chain-of-Thought + ReAct reasoning to prevent hallucination on policy questions.</p>
+      <div class="pipe-latency">OAuth 2.0 + JWT auth</div>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="c-dim">// Voice path</span>
+<span class="c-red">Caller</span> → <span class="c-blue">Twilio VOIP</span> → <span class="c-blue">Deepgram STT</span> → <span class="c-green">LangGraph Supervisor</span>
+  → intent classify
+      ├─ <span class="c-blue">Sales/SMB Agent</span>       Neo4j: sales_rules + user_profile
+      ├─ <span class="c-blue">Support Agent</span>         Neo4j: conversation_policies
+      ├─ <span class="c-blue">Appointment Agent</span>     CRM write + calendar
+      ├─ <span class="c-blue">Lead Mgmt Agent</span>       Neo4j: interaction_history
+      └─ <span class="c-blue">VCC Escalation</span>        human handoff
+
+<span class="c-dim">// Knowledge retrieval per agent turn</span>
+<span class="c-red">Agent query</span> → <span class="c-blue">GraphRAG</span> [Leiden community] → <span class="c-blue">Neo4j subgraph</span> → <span class="c-green">grounded context</span>
+<span class="c-green">DSPy prompt</span> + <span class="c-green">Pydantic schema</span> → <span class="c-green">structured response</span> → <span class="c-blue">TTS</span> → <span class="c-blue">LiveKit</span> → <span class="c-red">Caller</span>
+  </div>
+</div>
+
+<!-- DESIGN DECISIONS -->
+<div class="section">
+  <div class="eyebrow">Design Decisions</div>
+  <h2>Why these choices, not others.</h2>
+  <div class="decisions">
+
+    <div class="decision">
+      <div class="decision-q">WHY LANGGRAPH OVER SIMPLE CHAINS OR AUTOGEN?</div>
+      <h4>Sales calls are stateful, conditional, and mid-call routing is non-linear — chains can't model that</h4>
+      <p>Simple LangChain chains execute a fixed sequence. A sales call doesn't follow a fixed sequence: a support question mid-pitch needs an immediate agent swap without losing conversation state, then a return to the sales agent. LangGraph models this as an explicit state machine — nodes are agents, edges are conditional routing rules, and the full conversation state is maintained and passed across every hop. AutoGen was evaluated but its agent communication model is too loosely coupled for the strict handoff semantics a live call requires.</p>
+      <div class="rejected">// Rejected: LangChain sequential chain (no conditional mid-conversation routing), AutoGen (loose coupling, harder to enforce structured outputs per agent)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY NEO4J OVER A VECTOR STORE?</div>
+      <h4>Sales knowledge is relational — a vector store cannot express "this rule applies only to users in segment X with policy Y"</h4>
+      <p>A pure vector store retrieves semantically similar text. But the sales knowledge here was conditional and relational: a conversation policy might apply only to SMB leads above a certain deal size, linked to specific product rules, which are further linked to user segment profiles built from interaction history. These multi-hop relationships cannot be expressed as proximity in embedding space. Neo4j lets agents traverse the exact edges that matter for a given caller's context — not just find similar text.</p>
+      <div class="rejected">// Rejected: Qdrant vector store (no relationship traversal, can't encode conditional rule chains), hybrid vector+SQL (two systems to maintain, joins not graph-native)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY GRAPHRAG WITH LEIDEN COMMUNITY DETECTION?</div>
+      <h4>Individual node retrieval misses entity clusters — Leiden finds the community of related concepts agents need</h4>
+      <p>Microsoft GraphRAG augments graph retrieval with community-level summaries built using the Leiden algorithm. Leiden detects densely connected subgraphs in the knowledge graph — for example, a cluster of sales rules, the product types they govern, and the user segments they target. Instead of retrieving individual nodes, agents receive a pre-summarised community context covering all relevant interconnected entities. This is particularly valuable for the Sales/SMB agent, where answering a pitch question correctly requires simultaneously knowing the product, the rule set, and the caller's history.</p>
+      <div class="rejected">// Rejected: plain Neo4j Cypher retrieval only (misses emergent entity clusters), vanilla RAG over graph text exports (loses structural relationships)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY DSPY FOR PROMPT OPTIMISATION?</div>
+      <h4>Hand-written prompts for 5 agents across a changing knowledge graph are brittle — DSPy compiles reliable prompts from examples</h4>
+      <p>Each of the 5 agents needed prompts grounded in the company's specific conversation policies and sales rules. Writing and maintaining these by hand as the knowledge graph evolved was unsustainable. DSPy's bootstrap few-shot compiler takes labelled input/output examples and optimises prompt structure automatically, including chain-of-thought reasoning steps. This gave each agent a stable, policy-grounded prompt without prompt engineering becoming a full-time job — and made reliability testable rather than subjective.</p>
+      <div class="rejected">// Rejected: manual prompt engineering (brittle under knowledge graph updates), zero-shot prompting (unacceptable hallucination rate on policy-specific questions)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY DEEPGRAM STT OVER WHISPER?</div>
+      <h4>Streaming real-time transcription — Whisper's offline batch model adds unacceptable latency for a live call</h4>
+      <p>OpenAI Whisper is a strong transcription model but it processes audio in completed segments, not streams. For a voice sales platform, the agent needs to begin formulating a response while the caller is still speaking — streaming transcription is non-negotiable. Deepgram's API provides word-level streaming with low-latency partial transcripts, which lets the LangGraph supervisor begin intent classification before the caller finishes their sentence, shaving perceptible response delay from the conversation.</p>
+      <div class="rejected">// Rejected: OpenAI Whisper (batch processing, no streaming partial transcripts), Google Speech-to-Text (higher cost at volume, latency comparable)</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TECH STACK -->
+<div class="section">
+  <div class="eyebrow">Tech Stack</div>
+  <h2>Technologies</h2>
+
+  <span class="chip-label">Agents / AI</span>
+  <div class="stack-row">
+    <span class="chip">LangGraph</span>
+    <span class="chip">DSPy</span>
+    <span class="chip">Microsoft GraphRAG</span>
+    <span class="chip">Chain-of-Thought</span>
+    <span class="chip">ReAct</span>
+    <span class="chip">Pydantic</span>
+  </div>
+
+  <span class="chip-label">Knowledge Graph</span>
+  <div class="stack-row">
+    <span class="chip">Neo4j</span>
+    <span class="chip">Leiden Community Detection</span>
+    <span class="chip">Redis</span>
+  </div>
+
+  <span class="chip-label">Voice Pipeline</span>
+  <div class="stack-row">
+    <span class="chip">Twilio VOIP</span>
+    <span class="chip">Deepgram STT</span>
+    <span class="chip">Vercel AI SDK TTS</span>
+    <span class="chip">LiveKit WebRTC</span>
+  </div>
+
+  <span class="chip-label">Infrastructure</span>
+  <div class="stack-row">
+    <span class="chip">AWS</span>
+    <span class="chip">Kubernetes</span>
+    <span class="chip">OAuth 2.0</span>
+    <span class="chip">JWT</span>
+    <span class="chip">Docker</span>
+  </div>
+
+  <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+    <div class="eyebrow">Outcomes</div>
+    <div class="metrics-inline">
+      <div class="m-item"><div class="m-val">5</div><div class="m-lbl">Specialised agents, one supervisor</div></div>
+      <div class="m-item"><div class="m-val">4</div><div class="m-lbl">Knowledge graph node types</div></div>
+      <div class="m-item"><div class="m-val">DSPy</div><div class="m-lbl">Compiled prompts — no hand-engineering</div></div>
+      <div class="m-item"><div class="m-val">Live</div><div class="m-lbl">Streaming STT — no batch latency gap</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Rahul Sharma</p>
+  <div class="footer-nav">
+    <a href="index.html">Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:rahultheogre@gmail.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

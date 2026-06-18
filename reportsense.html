@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReportSense AI — Rahul Sharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:    #0f0f0f;
+      --white:  #ffffff;
+      --red:    #e03a1e;
+      --blue:   #1d4ed8;
+      --dim:    #555;
+      --border: #e5e5e5;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--ink); line-height: 1.65; }
+
+    nav { border-bottom: 1px solid var(--border); padding: 1rem 5vw; display: flex; justify-content: space-between; align-items: center; }
+    nav a { font-size: 0.8rem; font-weight: 600; text-decoration: none; color: var(--dim); letter-spacing: 0.05em; text-transform: uppercase; }
+    nav a:hover { color: var(--red); }
+    .nav-brand { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 800; color: var(--ink) !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+    .hero { padding: 5rem 5vw 4rem; border-bottom: 2px solid var(--ink); }
+    .hero-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -2px; }
+    .hero h1 .red { color: var(--red); }
+    .hero-sub { margin-top: 1.2rem; font-size: 1rem; color: var(--dim); max-width: 560px; line-height: 1.6; }
+    .hero-tags { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.7rem; border: 1px solid #ccc; color: #444; }
+
+    .section { padding: 3.5rem 5vw; border-bottom: 1px solid var(--border); }
+    .section-dark { padding: 3.5rem 5vw; border-bottom: 2px solid var(--ink); background: var(--ink); color: var(--white); }
+    .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    .section-dark .eyebrow { color: #60a5fa; }
+    h2 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 1.4rem; letter-spacing: -0.3px; }
+    .section-dark h2 { color: var(--white); }
+    p { font-size: 0.93rem; color: #333; margin-bottom: 0.8rem; line-height: 1.7; }
+    .section-dark p { color: #aaa; }
+
+    .pipeline-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 1.5rem; }
+    .pipe-step { padding: 1.8rem 1.5rem; border-right: 1px solid #222; }
+    .pipe-step:last-child { border-right: none; }
+    .pipe-num { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--red); font-weight: 500; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+    .pipe-step h4 { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.5rem; }
+    .pipe-step p { font-size: 0.78rem; color: #888; line-height: 1.5; margin: 0; }
+    .pipe-latency { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #4ade80; margin-top: 0.6rem; }
+
+    .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; background: #0a0a0a; color: #ccc; padding: 2rem; line-height: 1.9; margin-top: 1.5rem; overflow-x: auto; }
+    .c-red   { color: var(--red); }
+    .c-blue  { color: #60a5fa; }
+    .c-green { color: #4ade80; }
+    .c-dim   { color: #555; }
+
+    .decisions { display: flex; flex-direction: column; gap: 0; margin-top: 1.5rem; }
+    .decision { border-left: 3px solid var(--border); padding: 1.4rem 1.5rem; transition: border-color 0.15s; }
+    .decision:hover { border-left-color: var(--red); }
+    .decision-q { font-size: 0.82rem; font-weight: 600; color: var(--red); margin-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em; }
+    .decision h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .decision p { font-size: 0.88rem; color: #444; margin: 0; line-height: 1.6; }
+    .decision .rejected { font-size: 0.78rem; color: #999; margin-top: 0.4rem; font-family: 'JetBrains Mono', monospace; }
+
+    .stack-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .chip { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500; background: #f5f5f5; border: 1px solid var(--border); padding: 0.25rem 0.65rem; color: var(--ink); }
+    .chip-label { font-size: 0.7rem; color: var(--blue); font-weight: 600; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.2rem; margin-bottom: 0.4rem; display: block; }
+
+    .metrics-inline { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.2rem; }
+    .m-item { border-left: 2px solid var(--blue); padding-left: 0.8rem; }
+    .m-val { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--blue); line-height: 1; }
+    .m-lbl { font-size: 0.72rem; color: var(--dim); margin-top: 0.2rem; }
+
+    footer { border-top: 2px solid var(--ink); padding: 1.5rem 5vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--ink); }
+    footer p { font-size: 0.78rem; color: #666; margin: 0; }
+    .footer-nav { display: flex; gap: 1.5rem; }
+    .footer-nav a { font-size: 0.78rem; font-weight: 600; text-decoration: none; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-nav a:hover { color: var(--red); }
+
+    @media (max-width: 680px) {
+      .pipeline-steps { grid-template-columns: 1fr; }
+      .pipe-step { border-right: none; border-bottom: 1px solid #222; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Rahul Sharma</a>
+  <div style="display:flex;gap:2rem;">
+    <a href="index.html">← Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-meta">Independent · Mindbrain Client &nbsp;·&nbsp; 2024 &nbsp;·&nbsp; Architect, Team of 3</div>
+  <h1>Report<span class="red">Sense</span><br/>AI</h1>
+  <p class="hero-sub">A hybrid RAG pipeline for Tableau BI report discovery and natural language recommendation — BGE-M3 dense retrieval fused with BM25 via RRF, FlashRank reranking, and LLM query expansion. Reduced LLM operating cost by ~60%.</p>
+  <div class="hero-tags">
+    <span class="tag">RAG</span>
+    <span class="tag">BGE-M3</span>
+    <span class="tag">BM25</span>
+    <span class="tag">RRF Fusion</span>
+    <span class="tag">FlashRank</span>
+    <span class="tag">Query Expansion</span>
+    <span class="tag">Tableau</span>
+    <span class="tag">FastAPI</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="section">
+  <div class="eyebrow">Problem</div>
+  <h2>Analysts couldn't find the right Tableau report — and couldn't describe what they were looking for in keywords.</h2>
+  <p>Large BI environments accumulate hundreds of Tableau dashboards and workbooks over years. Finding the right report required knowing its exact name or navigating folder structures built by different teams with inconsistent naming conventions. Analysts queried natural language — "show me regional sales by product category for last quarter" — but the existing search returned results based on title keywords only, missing semantically equivalent reports named differently.</p>
+  <p>The second problem was cost. An early version passed entire report metadata catalogs into an LLM context window for each query, hitting token overflow errors on large environments and driving high per-query LLM spend. The system needed smarter retrieval that reduced what the LLM had to read — not just what it could find.</p>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section-dark">
+  <div class="eyebrow">Architecture</div>
+  <h2>Query Expansion → Hybrid Retrieval → Rerank → Generate</h2>
+  <div class="pipeline-steps">
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 01</div>
+      <h4>LLM Query Expansion</h4>
+      <p>User query rewritten into multiple reformulations before retrieval. Captures synonyms, alternative phrasings, and implicit intent — increases recall before the retrieval stage runs.</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 02</div>
+      <h4>Hybrid Retrieval</h4>
+      <p>BGE-M3 dense retrieval (semantic) + BM25 lexical retrieval run in parallel. RRF fusion: dense weight 0.65 / BM25 weight 0.35, k=60. Merged candidate set passed forward.</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 03</div>
+      <h4>FlashRank Reranking</h4>
+      <p>ms-marco-MiniLM-L-12-v2 reranker scores merged candidates jointly against the query. Threshold 0.65 — below this, candidates are dropped before LLM sees them.</p>
+      <div class="pipe-latency">80K token hard limit</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">STAGE 04</div>
+      <h4>LLM JSON Spec Generation</h4>
+      <p>Only reranked, threshold-passing chunks reach the LLM. Output: structured JSON spec — report ID, relevance rationale, recommended filters. Round-robin chunk distribution prevents token overflow.</p>
+      <div class="pipe-latency">~60% cost reduction</div>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="c-dim">// Query path</span>
+<span class="c-red">User query</span>
+  → <span class="c-blue">LLM query expansion</span>      n reformulations
+  → <span class="c-blue">BGE-M3 dense</span>             semantic retrieval
+  → <span class="c-blue">BM25 lexical</span>             exact-term retrieval
+  → <span class="c-green">RRF fusion</span>               dense=0.65 · BM25=0.35 · k=60
+  → <span class="c-blue">FlashRank rerank</span>          ms-marco-MiniLM-L-12-v2 · threshold=0.65
+  → <span class="c-blue">token budget check</span>        round-robin dist · 80K hard limit
+  → <span class="c-green">LLM JSON spec</span>            { report_id, rationale, filters }
+
+<span class="c-dim">// Parser factory — multi-source support</span>
+<span class="c-red">Source</span> → <span class="c-blue">ParserFactory</span>.get_parser(source_type) → <span class="c-green">normalised report schema</span>
+  </div>
+</div>
+
+<!-- DESIGN DECISIONS -->
+<div class="section">
+  <div class="eyebrow">Design Decisions</div>
+  <h2>Why these choices, not others.</h2>
+  <div class="decisions">
+
+    <div class="decision">
+      <div class="decision-q">WHY QUERY EXPANSION BEFORE RETRIEVAL?</div>
+      <h4>A single user query is often underspecified — expansion recovers recall before the retrieval bottleneck</h4>
+      <p>Users phrase BI queries colloquially: "profitability by region" might match a report titled "P&amp;L Geographic Breakdown Q3." Without expansion, the dense retriever produces an embedding of the original phrasing and may miss reports whose metadata uses different but equivalent terminology. Running LLM-driven query expansion before retrieval generates semantically equivalent reformulations — the retriever then runs against a richer query signal, not just the user's first draft. The cost of one small LLM call at query expansion is recovered many times over by reducing the number of irrelevant chunks the expensive reranker has to process.</p>
+      <div class="rejected">// Rejected: retrieval on raw query only (misses terminology mismatch between user language and report metadata), post-retrieval query rewriting (too late — bad first-stage recall can't be fixed by rewriting)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY HYBRID RETRIEVAL OVER PURE DENSE?</div>
+      <h4>BI report names and filter fields are exact strings — embedding space cannot reliably distinguish them</h4>
+      <p>Tableau report metadata contains exact identifiers: workbook names, data source names, calculated field names, filter parameter strings. These are not paraphraseable — "Sales_Region_FY24" and "Revenue_Geography_FY24" may be semantically similar but are distinct reports. Dense retrieval treats them as nearly identical. BM25 treats character-level differences as significant, which is exactly what you want for identifier-heavy metadata. The hybrid merge means semantic intent and exact-match precision both contribute to the candidate pool.</p>
+      <div class="rejected">// Rejected: pure BGE-M3 dense retrieval (poor discrimination on exact report identifiers and filter strings), pure BM25 (no handling of paraphrase or natural language queries)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY RRF OVER WEIGHTED SCORE FUSION?</div>
+      <h4>Dense and BM25 scores live in incompatible spaces — rank-based fusion is scale-invariant</h4>
+      <p>Dense retrieval returns cosine similarity scores in [−1, 1]. BM25 returns TF-IDF-derived scores with no fixed upper bound, varying with document length and corpus statistics. Directly multiplying these by weights and summing them produces a number that means nothing — a BM25 score of 12 and a cosine similarity of 0.87 are not commensurable. Reciprocal Rank Fusion operates on rank positions, which are scale-invariant — it doesn't matter what unit the underlying score is in. The k=60 smoothing parameter prevents top-ranked items from dominating when one retriever has an outlier score.</p>
+      <div class="rejected">// Rejected: weighted score sum (scores not commensurable across retrieval methods), simple score normalisation then sum (normalisation is corpus-dependent, degrades under distribution shift)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY FLASHRANK OVER A FULL CROSS-ENCODER?</div>
+      <h4>Cross-encoders are accurate but slow — FlashRank delivers equivalent quality at a fraction of the latency</h4>
+      <p>A standard cross-encoder like ms-marco-MiniLM runs a full transformer forward pass for every query-document pair. At our candidate set sizes post-RRF, this was the latency bottleneck. FlashRank implements the same ms-marco-MiniLM-L-12-v2 model with optimised inference — it uses late interaction scoring to avoid redundant computation across candidates that share query tokens. The 0.65 threshold was calibrated empirically: it drops candidates the LLM would score low anyway, further reducing the token payload that reaches the generation stage.</p>
+      <div class="rejected">// Rejected: standard cross-encoder (correct but slow at this candidate volume), no reranking (RRF alone left too much noise in the top-k for reliable LLM generation)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY PARSER FACTORY + CENTRALISED PROMPT MANAGEMENT?</div>
+      <h4>Multi-source support and prompt drift are engineering problems, not ML problems — solve them structurally</h4>
+      <p>The client operated both Tableau and PowerBI environments. Without a parser abstraction, adding PowerBI support would mean forking the retrieval logic. A parser factory with a shared normalised schema means the entire pipeline downstream — retrieval, reranking, generation — is source-agnostic. Centralised prompt management solved a different problem: with three engineers on the team, prompts were being edited in multiple places and diverging silently. A single prompt registry with versioned templates made prompt changes auditable and prevented the LLM's output format from drifting between environments.</p>
+      <div class="rejected">// Rejected: separate retrieval pipelines per BI source (code duplication, inconsistent behaviour), prompts embedded in route handlers (unauditable, three engineers editing the same strings in different files)</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TECH STACK -->
+<div class="section">
+  <div class="eyebrow">Tech Stack</div>
+  <h2>Technologies</h2>
+
+  <span class="chip-label">Retrieval / AI</span>
+  <div class="stack-row">
+    <span class="chip">BGE-M3</span>
+    <span class="chip">BM25</span>
+    <span class="chip">RRF Fusion</span>
+    <span class="chip">FlashRank</span>
+    <span class="chip">ms-marco-MiniLM-L-12-v2</span>
+    <span class="chip">LLM Query Expansion</span>
+  </div>
+
+  <span class="chip-label">Backend</span>
+  <div class="stack-row">
+    <span class="chip">Python</span>
+    <span class="chip">FastAPI</span>
+    <span class="chip">Parser Factory</span>
+    <span class="chip">Centralised Prompt Management</span>
+  </div>
+
+  <span class="chip-label">BI Sources</span>
+  <div class="stack-row">
+    <span class="chip">Tableau</span>
+    <span class="chip">PowerBI</span>
+  </div>
+
+  <span class="chip-label">Infrastructure</span>
+  <div class="stack-row">
+    <span class="chip">Docker</span>
+    <span class="chip">Azure</span>
+    <span class="chip">GitHub Actions</span>
+  </div>
+
+  <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+    <div class="eyebrow">Outcomes</div>
+    <div class="metrics-inline">
+      <div class="m-item"><div class="m-val">~60%</div><div class="m-lbl">LLM cost reduction</div></div>
+      <div class="m-item"><div class="m-val">RRF</div><div class="m-lbl">Scale-invariant score fusion</div></div>
+      <div class="m-item"><div class="m-val">80K</div><div class="m-lbl">Token hard limit — zero overflow errors</div></div>
+      <div class="m-item"><div class="m-val">2 sources</div><div class="m-lbl">Tableau + PowerBI, single pipeline</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Rahul Sharma</p>
+  <div class="footer-nav">
+    <a href="index.html">Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:rahultheogre@gmail.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

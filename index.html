@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rahul Sharma — AI/ML Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:    #0f0f0f;
+      --white:  #ffffff;
+      --red:    #e03a1e;
+      --blue:   #1d4ed8;
+      --dim:    #555;
+      --border: #e5e5e5;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--ink); line-height: 1.65; }
+
+    /* NAV */
+    nav { border-bottom: 1px solid var(--border); padding: 1rem 5vw; display: flex; justify-content: space-between; align-items: center; }
+    nav a { font-size: 0.8rem; font-weight: 600; text-decoration: none; color: var(--dim); letter-spacing: 0.05em; text-transform: uppercase; }
+    nav a:hover { color: var(--red); }
+    .nav-brand { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 800; color: var(--ink) !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+    /* HERO */
+    .hero { padding: 5rem 5vw 4rem; border-bottom: 2px solid var(--ink); }
+    .hero-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -2px; }
+    .hero h1 .red { color: var(--red); }
+    .hero-sub { margin-top: 1.2rem; font-size: 1rem; color: var(--dim); max-width: 600px; line-height: 1.7; }
+    .hero-edu { margin-top: 1.2rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #888; letter-spacing: 0.04em; }
+    .hero-edu span { color: var(--blue); }
+
+    /* CONTACT ROW */
+    .contact-row { margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; }
+    .contact-link { font-size: 0.8rem; font-weight: 600; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--border); padding-bottom: 1px; letter-spacing: 0.02em; }
+    .contact-link:hover { border-bottom-color: var(--red); color: var(--red); }
+
+    /* PROJECTS GRID */
+    .projects-section { padding: 3.5rem 5vw; }
+    .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    h2 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 2rem; letter-spacing: -0.3px; }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 0; border-top: 1px solid var(--border); border-left: 1px solid var(--border); }
+    .project-card { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 2rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: background 0.15s; }
+    .project-card:hover { background: #fafafa; }
+    .project-card:hover .card-title { color: var(--red); }
+
+    .card-context { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 0.8rem; }
+    .card-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 0.5rem; transition: color 0.15s; line-height: 1.25; }
+    .card-desc { font-size: 0.83rem; color: var(--dim); line-height: 1.6; flex: 1; margin-bottom: 1.2rem; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .card-tag { font-family: 'Inter', sans-serif; font-size: 0.68rem; font-weight: 500; padding: 0.15rem 0.55rem; border: 1px solid #ddd; color: #555; }
+    .card-arrow { margin-top: 1.4rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #bbb; letter-spacing: 0.06em; }
+    .project-card:hover .card-arrow { color: var(--red); }
+
+    /* FEATURED badge */
+    .card-featured { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); background: var(--red); padding: 0.15rem 0.5rem; margin-bottom: 0.8rem; }
+
+    /* ABOUT */
+    .about-section { padding: 3.5rem 5vw; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .about-section p { font-size: 0.93rem; color: #333; line-height: 1.75; margin-bottom: 0.8rem; }
+    .about-section h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+    .domain-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .domain-list li { font-size: 0.83rem; color: var(--dim); padding-left: 1rem; position: relative; }
+    .domain-list li::before { content: '—'; position: absolute; left: 0; color: var(--red); font-family: 'JetBrains Mono', monospace; }
+
+    footer { border-top: 2px solid var(--ink); padding: 1.5rem 5vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--ink); }
+    footer p { font-size: 0.78rem; color: #666; margin: 0; }
+    .footer-nav { display: flex; gap: 1.5rem; }
+    .footer-nav a { font-size: 0.78rem; font-weight: 600; text-decoration: none; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-nav a:hover { color: var(--red); }
+
+    @media (max-width: 760px) {
+      .projects-grid { grid-template-columns: 1fr; }
+      .about-section { grid-template-columns: 1fr; gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Rahul Sharma</a>
+  <div style="display:flex;gap:2rem;">
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:rahultheogre@gmail.com">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-meta">AI / ML · Production Systems · 12 Years</div>
+  <h1>Building systems<br/>that <span class="red">reason,</span><br/>retrieve, act.</h1>
+  <p class="hero-sub">I design and ship production AI systems — multi-agent pipelines, RAG architectures, real-time recommendation engines, and LLMOps infrastructure. Across retail, insurance, healthcare, and enterprise hiring.</p>
+  <div class="hero-edu">
+    <span>IIT Roorkee</span> &nbsp;·&nbsp; <span>Hansraj College BA English</span> &nbsp;·&nbsp; <span>JNU MA Philosophy</span> &nbsp;·&nbsp; <span>IIIT Delhi PG AI/ML</span>
+  </div>
+  <div class="contact-row">
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener" class="contact-link">github.com/rahultheogre</a>
+    <a href="mailto:rahultheogre@gmail.com" class="contact-link">rahultheogre@gmail.com</a>
+    <a href="https://wa.me/919560825115" target="_blank" rel="noopener" class="contact-link">WhatsApp +91 95608 25115</a>
+  </div>
+</div>
+
+<!-- PROJECTS -->
+<div class="projects-section">
+  <div class="eyebrow">Work</div>
+  <h2>Production projects</h2>
+
+  <div class="projects-grid">
+
+    <!-- AI Hiring Platform — featured, newest -->
+    <a href="ai-hiring-platform.html" class="project-card">
+      <div class="card-featured">Latest</div>
+      <div class="card-context">Independent &nbsp;·&nbsp; 2024–2025</div>
+      <div class="card-title">AI Hiring Platform</div>
+      <div class="card-desc">LangGraph multi-agent hiring system — Resume Screener, Interview Analyser, and LLM-as-judge Candidate Ranker with RBAC across 6 roles, ProctorAgent transcript NLP, and full LLMOps observability.</div>
+      <div class="card-tags">
+        <span class="card-tag">LangGraph</span>
+        <span class="card-tag">LLM-as-judge</span>
+        <span class="card-tag">Azure</span>
+        <span class="card-tag">Langfuse</span>
+        <span class="card-tag">RBAC</span>
+      </div>
+      <div class="card-arrow">VIEW PROJECT →</div>
+    </a>
+
+    <!-- ReportSense AI -->
+    <a href="reportsense.html" class="project-card">
+      <div class="card-context">Independent · Mindbrain &nbsp;·&nbsp; 2024</div>
+      <div class="card-title">ReportSense AI</div>
+      <div class="card-desc">Hybrid RAG pipeline for Tableau BI report discovery — BGE-M3 dense retrieval fused with BM25 via RRF, FlashRank reranking, and LLM query expansion. ~60% LLM cost reduction.</div>
+      <div class="card-tags">
+        <span class="card-tag">RAG</span>
+        <span class="card-tag">BGE-M3</span>
+        <span class="card-tag">RRF Fusion</span>
+        <span class="card-tag">FlashRank</span>
+      </div>
+      <div class="card-arrow">VIEW PROJECT →</div>
+    </a>
+
+    <!-- SellBot -->
+    <a href="sellbot.html" class="project-card">
+      <div class="card-context">SellCX &nbsp;·&nbsp; Feb–Jul 2024</div>
+      <div class="card-title">SellBot — Agentic Sales Platform</div>
+      <div class="card-desc">Voice-first multi-agent sales platform. LangGraph Supervisor routing live calls across 5 specialised agents, grounded in a Neo4j knowledge graph with Microsoft GraphRAG and Leiden community detection.</div>
+      <div class="card-tags">
+        <span class="card-tag">LangGraph</span>
+        <span class="card-tag">Neo4j</span>
+        <span class="card-tag">GraphRAG</span>
+        <span class="card-tag">DSPy</span>
+      </div>
+      <div class="card-arrow">VIEW PROJECT →</div>
+    </a>
+
+    <!-- Netcom RAG -->
+    <a href="netcom-rag.html" class="project-card">
+      <div class="card-context">Status Neo · Client: Netcom &nbsp;·&nbsp; Oct 2023–Feb 2024</div>
+      <div class="card-title">Netcom RAG Training Assistant</div>
+      <div class="card-desc">PDF-grounded RAG system for trainer knowledge retrieval — adaptive chunking, hybrid semantic + keyword search, cross-encoder reranking, 3-tier caching. Reduced session prep from 2 hours to 45 minutes.</div>
+      <div class="card-tags">
+        <span class="card-tag">RAG</span>
+        <span class="card-tag">Qdrant</span>
+        <span class="card-tag">Nomic AI</span>
+        <span class="card-tag">Hybrid Search</span>
+      </div>
+      <div class="card-arrow">VIEW PROJECT →</div>
+    </a>
+
+    <!-- Semantic Recommender -->
+    <a href="semantic-recommender.html" class="project-card">
+      <div class="card-context">SRM Technologies &nbsp;·&nbsp; 2024–2025</div>
+      <div class="card-title">Semantic Recommender Engine</div>
+      <div class="card-desc">Real-time 3-stage recommendation pipeline for conference networking — HNSW semantic retrieval, LambdaMART reranking on behavioural signals, feature filtering. Sub-200ms at 1000+ concurrent users.</div>
+      <div class="card-tags">
+        <span class="card-tag">HNSW</span>
+        <span class="card-tag">LambdaMART</span>
+        <span class="card-tag">Stella400M</span>
+        <span class="card-tag">AWS Bedrock</span>
+      </div>
+      <div class="card-arrow">VIEW PROJECT →</div>
+    </a>
+
+    <!-- NLP Insights -->
+    <a href="nlp-insights.html" class="project-card">
+      <div class="card-context">Onward Technologies &nbsp;·&nbsp; 2021–2023</div>
+      <div class="card-title">NLP Insights — Newspaper Intelligence</div>
+      <div class="card-desc">BERT-based multi-task NLP platform for media content analysis — entity-level sentiment, abstractive summarisation, NER (94% F1), and neural topic modelling via BERTopic in a single shared-encoder pipeline.</div>
+      <div class="card-tags">
+        <span class="card-tag">BERT</span>
+        <span class="card-tag">BERTopic</span>
+        <span class="card-tag">Multi-task NLP</span>
+        <span class="card-tag">NER</span>
+      </div>
+      <div class="card-arrow">VIEW PROJECT →</div>
+    </a>
+
+    <!-- Catman Optimizer -->
+    <a href="catman-optimizer.html" class="project-card">
+      <div class="card-context">Onward Technologies &nbsp;·&nbsp; 2021–2023</div>
+      <div class="card-title">Catman Planogram Optimizer</div>
+      <div class="card-desc">Retail category management and planogram optimisation engine — automated shelf space allocation with simulated annealing, sub-200ms constraint solving, and Azure OpenAI integration.</div>
+      <div class="card-tags">
+        <span class="card-tag">Simulated Annealing</span>
+        <span class="card-tag">Azure OpenAI</span>
+        <span class="card-tag">Retail AI</span>
+      </div>
+      <div class="card-arrow">VIEW PROJECT →</div>
+    </a>
+
+    <!-- Fraud Detection -->
+    <a href="fraud-detection.html" class="project-card">
+      <div class="card-context">Onward Technologies &nbsp;·&nbsp; 2021–2023</div>
+      <div class="card-title">P&amp;C Insurance Fraud Detection</div>
+      <div class="card-desc">Insurance fraud detection system for Personal Lines — XGBoost + Isolation Forest ensemble with graph community detection, SHAP explainability, and four-layer scoring architecture.</div>
+      <div class="card-tags">
+        <span class="card-tag">XGBoost</span>
+        <span class="card-tag">Isolation Forest</span>
+        <span class="card-tag">Graph Analytics</span>
+        <span class="card-tag">SHAP</span>
+      </div>
+      <div class="card-arrow">VIEW PROJECT →</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="about-section">
+  <div>
+    <h3>Background</h3>
+    <p>I build AI systems end-to-end — from retrieval architecture and agent design through to production deployment on Azure. My work sits at the intersection of applied ML, systems engineering, and domain expertise built across retail, insurance, and enterprise software.</p>
+    <p>My background spans technical and humanistic disciplines — engineering at IIT Roorkee, English literature at Hansraj College, philosophy at JNU, and a postgraduate specialisation in AI/ML at IIIT Delhi. I bring that range into how I think about systems: what they do technically, and what they mean for the people using them.</p>
+  </div>
+  <div>
+    <h3>Domain expertise</h3>
+    <ul class="domain-list">
+      <li>Production RAG pipelines — hybrid retrieval, reranking, caching</li>
+      <li>LangGraph multi-agent systems — state machines, routing, observability</li>
+      <li>Vector search — HNSW, Qdrant, embedding selection, index design</li>
+      <li>LLMOps — Langfuse, MLflow, prompt versioning, cost instrumentation</li>
+      <li>Azure ML / OpenAI / Container Apps — end-to-end deployment</li>
+      <li>Graph analytics — Neo4j, NetworkX, community detection</li>
+      <li>Insurance AI — fraud detection, NBA, Guidewire</li>
+      <li>Retail AI — planogram optimisation, category management</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Rahul Sharma</p>
+  <div class="footer-nav">
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:rahultheogre@gmail.com">Contact</a>
+    <a href="https://wa.me/919560825115" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+</footer>
+
+</body>
+</html>

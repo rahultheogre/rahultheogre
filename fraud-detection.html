@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>P&C Fraud Detection — Rahul Sharma</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --ink:#0f0f0f; --white:#ffffff; --red:#e03a1e; --blue:#1d4ed8; --dim:#555; --border:#e5e5e5; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--ink); line-height: 1.65; }
+
+    nav { border-bottom: 1px solid var(--border); padding: 1rem 5vw; display: flex; justify-content: space-between; align-items: center; }
+    nav a { font-size: 0.8rem; font-weight: 600; text-decoration: none; color: var(--dim); letter-spacing: 0.05em; text-transform: uppercase; }
+    nav a:hover { color: var(--red); }
+    .nav-brand { font-size: 1rem; font-weight: 800; color: var(--ink) !important; text-transform: none !important; letter-spacing: 0 !important; }
+
+    .hero { padding: 5rem 5vw 4rem; border-bottom: 2px solid var(--ink); }
+    .hero-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 1rem; }
+    .hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.0; letter-spacing: -2px; }
+    .hero h1 .red { color: var(--red); }
+    .hero-sub { margin-top: 1.2rem; font-size: 1rem; color: var(--dim); max-width: 560px; line-height: 1.6; }
+    .hero-tags { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag { font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.7rem; border: 1px solid #ccc; color: #444; }
+
+    .section { padding: 3.5rem 5vw; border-bottom: 1px solid var(--border); }
+    .section-dark { padding: 3.5rem 5vw; border-bottom: 2px solid var(--ink); background: var(--ink); color: var(--white); }
+    .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; }
+    .section-dark .eyebrow { color: #60a5fa; }
+    h2 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 1.4rem; letter-spacing: -0.3px; }
+    .section-dark h2 { color: var(--white); }
+    p { font-size: 0.93rem; color: #333; margin-bottom: 0.8rem; line-height: 1.7; }
+    .section-dark p { color: #aaa; }
+
+    /* TIER GRID */
+    .tier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+    .tier-card { border: 1.5px solid #222; padding: 1.8rem; }
+    .tier-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .tier-label.cpu { color: var(--red); }
+    .tier-label.gpu { color: #4ade80; }
+    .tier-card h4 { font-size: 0.95rem; font-weight: 700; color: var(--white); margin-bottom: 0.6rem; }
+    .tier-card p { font-size: 0.82rem; color: #888; margin: 0 0 0.5rem 0; line-height: 1.5; }
+    .tier-steps { list-style: none; margin-top: 0.8rem; }
+    .tier-steps li { font-size: 0.78rem; color: #aaa; padding: 0.25rem 0; border-bottom: 1px solid #1a1a1a; font-family: 'JetBrains Mono', monospace; }
+    .tier-steps li:last-child { border-bottom: none; }
+
+    /* LAYERS */
+    .layer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 1.5rem; }
+    .layer { padding: 1.5rem; border-right: 1px solid #222; }
+    .layer:last-child { border-right: none; }
+    .layer-num { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--red); font-weight: 500; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .layer h4 { font-size: 0.88rem; font-weight: 600; color: var(--white); margin-bottom: 0.4rem; }
+    .layer p { font-size: 0.78rem; color: #888; margin: 0; line-height: 1.5; }
+
+    .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; background: #0a0a0a; color: #ccc; padding: 2rem; line-height: 1.9; margin-top: 1.5rem; overflow-x: auto; }
+    .c-red { color: var(--red); } .c-blue { color: #60a5fa; } .c-green { color: #4ade80; } .c-dim { color: #555; }
+
+    .decisions { display: flex; flex-direction: column; gap: 0; margin-top: 1.5rem; }
+    .decision { border-left: 3px solid var(--border); padding: 1.4rem 1.5rem; transition: border-color 0.15s; }
+    .decision:hover { border-left-color: var(--red); }
+    .decision-q { font-size: 0.82rem; font-weight: 600; color: var(--red); margin-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em; }
+    .decision h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .decision p { font-size: 0.88rem; color: #444; margin: 0; line-height: 1.6; }
+    .decision .rejected { font-size: 0.78rem; color: #999; margin-top: 0.4rem; font-family: 'JetBrains Mono', monospace; }
+
+    .chip-label { font-size: 0.7rem; color: var(--blue); font-weight: 600; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.2rem; margin-bottom: 0.4rem; display: block; }
+    .stack-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; }
+    .chip { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500; background: #f5f5f5; border: 1px solid var(--border); padding: 0.25rem 0.65rem; color: var(--ink); }
+
+    .metrics-inline { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 1.2rem; }
+    .m-item { border-left: 2px solid var(--blue); padding-left: 0.8rem; }
+    .m-val { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--blue); line-height: 1; }
+    .m-lbl { font-size: 0.72rem; color: var(--dim); margin-top: 0.2rem; }
+
+    footer { border-top: 2px solid var(--ink); padding: 1.5rem 5vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--ink); }
+    footer p { font-size: 0.78rem; color: #666; margin: 0; }
+    .footer-nav { display: flex; gap: 1.5rem; }
+    .footer-nav a { font-size: 0.78rem; font-weight: 600; text-decoration: none; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; }
+    .footer-nav a:hover { color: var(--red); }
+
+    @media (max-width: 680px) {
+      .tier-grid { grid-template-columns: 1fr; }
+      .layer-grid { grid-template-columns: 1fr; }
+      .layer { border-right: none; border-bottom: 1px solid #222; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">Rahul Sharma</a>
+  <div style="display:flex;gap:2rem;">
+    <a href="index.html">← Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-meta">Insurance & Roadside Assistance &nbsp;·&nbsp; Production System</div>
+  <h1>P&C Fraud<br/><span class="red">Detection</span><br/>Pipeline</h1>
+  <p class="hero-sub">A dual-tier fraud detection system combining traditional graph ML (CPU) with GraphSAGE-based deep graph learning (GPU). Detects organized fraud rings, individual bad actors, and novel fraud patterns using a multi-layer graph architecture over 186 engineered features.</p>
+  <div class="hero-tags">
+    <span class="tag">Graph ML</span>
+    <span class="tag">GraphSAGE</span>
+    <span class="tag">Leiden Detection</span>
+    <span class="tag">XGBoost</span>
+    <span class="tag">SHAP</span>
+    <span class="tag">Snowflake</span>
+    <span class="tag">NetworkX</span>
+    <span class="tag">Dual-Tier Architecture</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="eyebrow">Problem</div>
+  <h2>Insurance fraud rings don't show up in individual records.</h2>
+  <p>Traditional ML models score members in isolation — they miss organized fraud where individual behaviour looks normal but the network pattern is anomalous. A member who shares a phone number with 12 others, all making high-cost claims in the same zip code, looks clean in row-level feature space.</p>
+  <p>The system needed to detect both individual fraud signals and organized ring structures simultaneously — across roadside assistance claims, cost patterns, contact sharing, and timing coordination.</p>
+</div>
+
+<div class="section-dark">
+  <div class="eyebrow">Architecture</div>
+  <h2>Dual-Tier System</h2>
+  <p style="color:#888; margin-bottom:1.5rem;">Two tiers deployed based on computational budget and detection requirement. Tier 1 runs in production for real-time scoring. Tier 2 runs periodically for deep ring analysis.</p>
+
+  <div class="tier-grid">
+    <div class="tier-card">
+      <div class="tier-label cpu">Tier 1 — CPU · Real-Time</div>
+      <h4>Leiden + PageRank + XGBoost</h4>
+      <p>Cost-effective, interpretable, production-ready. Graph metrics augment 186 engineered features for XGBoost classification.</p>
+      <ul class="tier-steps">
+        <li>01 → Graph construction from relationship tables</li>
+        <li>02 → Leiden community detection</li>
+        <li>03 → PageRank + centrality computation</li>
+        <li>04 → Graph features merged with 186 base features</li>
+        <li>05 → XGBoost fraud probability scoring</li>
+        <li>06 → SHAP explanation for investigators</li>
+      </ul>
+    </div>
+    <div class="tier-card">
+      <div class="tier-label gpu">Tier 2 — GPU · Batch Analysis</div>
+      <h4>GraphSAGE Unsupervised + Supervised</h4>
+      <p>Deep graph learning. Discovers novel fraud patterns without labeled examples. Inductive — scores new members immediately.</p>
+      <ul class="tier-steps">
+        <li>01 → Multi-layer graph construction</li>
+        <li>02 → Leiden + PageRank (enhanced multi-resolution)</li>
+        <li>03 → GraphSAGE unsupervised — 128-256 dim embeddings</li>
+        <li>04 → Feature fusion: embeddings + 186 features + graph</li>
+        <li>05 → GraphSAGE supervised — fraud probability</li>
+        <li>06 → Role detection: organizer / participant / mule</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top: 2rem;">
+    <div class="eyebrow" style="color:#60a5fa;">Graph Layers</div>
+    <h2 style="margin-bottom:0;">Multi-Layer Graph Architecture</h2>
+  </div>
+  <div class="layer-grid">
+    <div class="layer">
+      <div class="layer-num">LAYER 01</div>
+      <h4>Member</h4>
+      <p>membership_number as primary nodes. Membership level, type, tenure, status as node attributes.</p>
+    </div>
+    <div class="layer">
+      <div class="layer-num">LAYER 02</div>
+      <h4>Contact</h4>
+      <p>Phone, email, address as connecting nodes. Shared contacts create edges between members — primary fraud ring signal.</p>
+    </div>
+    <div class="layer">
+      <div class="layer-num">LAYER 03</div>
+      <h4>Service</h4>
+      <p>Call events, costs, timing as relationship weights. Coordinated call patterns and cost anomalies encoded as edge weights.</p>
+    </div>
+    <div class="layer">
+      <div class="layer-num">LAYER 04</div>
+      <h4>Geographic</h4>
+      <p>Zip codes, address clusters as spatial nodes. Geographic proximity combined with usage correlation reveals local fraud operations.</p>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="c-dim">// Tier 1 scoring pipeline</span>
+<span class="c-red">member_record</span>
+  → <span class="c-blue">graph_lookup</span>(leiden_community, pagerank, centrality)
+  → <span class="c-blue">feature_fusion</span>(186 base features + 8 graph features)
+  → <span class="c-blue">XGBoost</span>.predict_proba()
+  → <span class="c-green">fraud_score + SHAP explanation</span>
+
+<span class="c-dim">// Tier 2 batch pipeline</span>
+<span class="c-red">full_member_graph</span>
+  → <span class="c-blue">GraphSAGE_unsupervised</span>(3-layer, 128-dim embeddings)
+  → <span class="c-blue">feature_fusion</span>(embeddings + 186 + graph context)
+  → <span class="c-blue">GraphSAGE_supervised</span>(binary cross-entropy, class-balanced)
+  → <span class="c-green">fraud_prob + role_classification</span> (organizer / participant / mule)
+  </div>
+</div>
+
+<div class="section">
+  <div class="eyebrow">Design Decisions</div>
+  <h2>Why these choices, not others.</h2>
+  <div class="decisions">
+
+    <div class="decision">
+      <div class="decision-q">WHY A DUAL-TIER ARCHITECTURE?</div>
+      <h4>Real-time scoring and deep ring analysis have fundamentally different compute profiles</h4>
+      <p>GPU-based GraphSAGE is powerful but takes minutes to run over large graphs — not suitable for real-time claim scoring. XGBoost with graph-derived features runs in milliseconds on CPU and is fully interpretable for investigators. The dual-tier approach gives you fast, explainable production scoring (Tier 1) plus periodic deep analysis that catches sophisticated rings Tier 1 misses (Tier 2). Each tier informs the other — Tier 2 ring profiles update Tier 1 community features.</p>
+      <div class="rejected">// Rejected: Single GPU model for all scoring (latency too high for real-time), pure rule-based (misses novel patterns)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY LEIDEN OVER LOUVAIN FOR COMMUNITY DETECTION?</div>
+      <h4>Leiden guarantees well-connected communities — Louvain can produce internally disconnected ones</h4>
+      <p>Louvain is fast but has a known flaw: it can assign nodes to communities they're not well-connected to, producing structurally invalid clusters. For fraud ring detection, a disconnected community is a false positive. Leiden fixes this by refining the partition after each merge step, guaranteeing that every community is internally connected. This matters when you're using community membership as an investigative signal — investigators need to trust that community members are actually linked.</p>
+      <div class="rejected">// Rejected: Louvain (disconnected community problem), label propagation (unstable, non-deterministic)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY GRAPHSAGE OVER A STANDARD GNN?</div>
+      <h4>GraphSAGE is inductive — it generalizes to new members without retraining</h4>
+      <p>Standard transductive GNNs (GCN, GAT) learn embeddings for fixed nodes in a fixed graph. When a new member joins, you have to retrain the entire model. GraphSAGE learns an aggregation function over sampled neighbourhoods instead — so it can immediately generate an embedding for a new node by aggregating its neighbours' features. For fraud detection where new accounts are created constantly, this is critical.</p>
+      <div class="rejected">// Rejected: GCN (transductive, no new-member inference), DeepWalk (ignores node features)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY UNSUPERVISED GRAPHSAGE BEFORE SUPERVISED?</div>
+      <h4>Labeled fraud data is scarce — unsupervised pre-training on graph structure compensates</h4>
+      <p>Confirmed fraud labels are expensive and lag real behavior. Unsupervised GraphSAGE learns rich structural embeddings from the full graph without labels — capturing network position, community role, and relationship patterns. These embeddings are then used as input to the supervised classifier, which only needs labels for the final prediction layer. This dramatically reduces the labeled data requirement and means the model still learns from the majority of unlabeled members.</p>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY AUGMENT XGBOOST WITH GRAPH FEATURES RATHER THAN REPLACE IT?</div>
+      <h4>XGBoost + graph features outperforms either alone — and stays interpretable</h4>
+      <p>Graph centrality metrics (PageRank, betweenness, community fraud ratio) capture network-level signals that tabular features miss entirely. But XGBoost on tabular data alone already captures strong individual behavioral signals (call margin, cost anomalies, contact sharing counts). Combining them gives the model both perspectives. Crucially, XGBoost with SHAP remains fully interpretable — investigators can see exactly which features drove a fraud flag, which is a compliance requirement in insurance.</p>
+      <div class="rejected">// Rejected: Pure graph model (loses tabular feature signal, less interpretable), pure tabular XGBoost (blind to ring structures)</div>
+    </div>
+
+    <div class="decision">
+      <div class="decision-q">WHY WEIGHTED RELATIONSHIP EDGES (2.5–3.0 / 1.0–2.0 / 0.3–0.8)?</div>
+      <h4>Not all shared contacts carry equal fraud signal — weight encodes domain knowledge</h4>
+      <p>Exact phone sharing between two adults in different households is a strong fraud indicator (weight 2.5–3.0). Similar usage timing patterns are weaker — many legitimate members call at similar times (weight 0.3–0.8). Encoding these weights into the graph means community detection and centrality algorithms naturally prioritize strong-signal edges when identifying rings, rather than treating all relationships as equivalent. Weights were derived from domain expert input and validated against confirmed fraud cases.</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <div class="eyebrow">Tech Stack</div>
+  <h2>Technologies</h2>
+  <span class="chip-label">Graph ML</span>
+  <div class="stack-row">
+    <span class="chip">GraphSAGE</span><span class="chip">Leiden Algorithm</span>
+    <span class="chip">PageRank</span><span class="chip">Betweenness Centrality</span>
+    <span class="chip">NetworkX</span>
+  </div>
+  <span class="chip-label">ML</span>
+  <div class="stack-row">
+    <span class="chip">XGBoost</span><span class="chip">Isolation Forest</span>
+    <span class="chip">SHAP</span><span class="chip">PyTorch</span><span class="chip">Scikit-learn</span>
+  </div>
+  <span class="chip-label">Data & Infra</span>
+  <div class="stack-row">
+    <span class="chip">Snowflake</span><span class="chip">Python</span>
+    <span class="chip">FastAPI</span><span class="chip">Docker</span><span class="chip">GitHub Actions</span>
+  </div>
+
+  <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+    <div class="eyebrow">Outcomes</div>
+    <div class="metrics-inline">
+      <div class="m-item"><div class="m-val">85–90%</div><div class="m-lbl">Fraud detection rate (Tier 1)</div></div>
+      <div class="m-item"><div class="m-val">186</div><div class="m-lbl">Engineered features</div></div>
+      <div class="m-item"><div class="m-val">10ms</div><div class="m-lbl">Per-claim inference</div></div>
+      <div class="m-item"><div class="m-val">SHAP</div><div class="m-lbl">Full explainability · compliance</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Rahul Sharma</p>
+  <div class="footer-nav">
+    <a href="index.html">Portfolio</a>
+    <a href="https://github.com/rahultheogre" target="_blank" rel="noopener">GitHub</a>
+    <a href="mailto:rahultheogre@gmail.com">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>
